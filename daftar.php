@@ -38,6 +38,16 @@
                 text-align: center;
                 font-weight: bold;
             }
+            .error{
+                background-color: #f8d7da;
+                color: #721c24;
+                padding: 15px;
+                margin-bottom: 20px;
+                border: 1px solid #f5c6cb;
+                border-radius: 5px;
+                text-align: center;
+                font-weight: bold;
+            }
             table{
                 width: 100%;
                 border-collapse: collapse;
@@ -56,6 +66,17 @@
             }
             td{
                 color: #666;
+            }
+            .data-table{
+                margin-top: 30px;
+            }
+            .data-table th{
+                background-color: #007bff;
+                color: white;
+                text-align: center;
+            }
+            .data-table td{
+                text-align: center;
             }
             .back-button{
                 text-align: center;
@@ -79,15 +100,59 @@
         <div class="container">
             <h1>Data Registrasi User</h1>
             
-            <?php if (isset($_POST['submit'])): ?>
+            <?php if (isset($_POST['submit'])): 
+                $nama_depan = htmlspecialchars($_POST['nama_depan']);
+                $nama_belakang = htmlspecialchars($_POST['nama_belakang']);
+                $umur = (int)htmlspecialchars($_POST['umur']);
+                $asal_kota = htmlspecialchars($_POST['asal_kota']);
+                
+                // Validasi umur minimal 10
+                if ($umur < 10){
+                    echo "<div class='error'>Error: Umur harus minimal 10 tahun.</div>";
+                    echo "<div class='back-button'><a href='index.html'>Kembali ke Form Registrasi</a></div>";
+                } else {
+            ?>
                 <div class="success-message">
                     Registrasi Berhasil!
                 </div>
+
+                <!-- Tabel data dengan jumlah baris sesuai umur -->
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Lengkap</th>
+                            <th>Umur</th>
+                            <th>Asal Kota</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        for ($i = 1; $i <= $umur; $i++) {
+                            // output baris dengan nomor genap
+                            if ($i % 2 == 0) {
+                                // skip baris 4 dan 8
+                                if ($i != 4 && $i != 8) {
+                                    $nama_lengkap = $nama_depan . ' ' . $nama_belakang;
+                                    echo "<tr>";
+                                    echo "<td>$i</td>";
+                                    echo "<td>$nama_lengkap</td>";
+                                    echo "<td>$umur</td>";
+                                    echo "<td>$asal_kota</td>";
+                                    echo "</tr>";
+                                }
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
                 
                 <div class="back-button">
                     <a href="index.html">Kembali ke Form Registrasi</a>
                 </div>
-            <?php else: ?>
+            <?php 
+                } // end of else (umur >= 10)
+            else: ?>
                 <div style="text-align: center; color: #dc3545; padding: 20px;">
                     <h3>Error: Data tidak ditemukan</h3>
                     <p>Silakan isi form registrasi terlebih dahulu.</p>
